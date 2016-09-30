@@ -1,0 +1,34 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.1.RELEASE'
+	}
+	repositories {
+		maven { url 'http://10.164.194.139:8081/nexus/content/groups/public/' }
+//		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+	baseName = 'ng-boot-oauth'
+	version = '0.0.1'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	maven { url 'http://10.164.194.139:8081/nexus/content/groups/public/' }
+//	mavenCentral()
+}
+
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-security')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
