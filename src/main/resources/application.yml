@@ -1,0 +1,21 @@
+server:
+  port: 9999
+  contextPath: /uaa
+  use-forward-headers: true
+  error.whitelabel.enabled: false
+  compression:
+    enabled: true
+    min-response-size: 1024
+    mime-types:
+       - text/html
+       - text/css
+       - text/plain
+       - text/xml
+       - application/json
+       - application/javascript
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+  path: ./logs
+
