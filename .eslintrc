@@ -1,0 +1,11 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    "comma-dangle": 0,
+    "comma-style": 0,
+    "brace-style": 0,
+    "indent": 0,
+    "max-len": 0,
+    "no-param-reassign": ["error", { "props": false }]
+  }
+}
