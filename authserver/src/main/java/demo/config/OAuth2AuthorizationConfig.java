@@ -39,7 +39,7 @@ public class OAuth2AuthorizationConfig extends
                 .secret("acmesecret")
                 .authorities("ROLE_TRUSTED_CLIENT")
                 .authorizedGrantTypes("implicit", "authorization_code", "refresh_token", "password")
-                .accessTokenValiditySeconds(600)
+                .accessTokenValiditySeconds(3600)
                 .scopes("openid")
                 .autoApprove(true);
     }

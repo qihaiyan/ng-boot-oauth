@@ -13,7 +13,6 @@ const DEFAULT_PARAMS = {
         './src/main/frontend/app'
     ],
     output: {
-        // publicPath: '',
         filename: 'js/[name]-[hash:6].js',
         sourceMapFilename: 'js/[name]-[hash:6].map'
     },
@@ -35,7 +34,7 @@ const DEFAULT_PARAMS = {
             }
             , {
                 test: /\.(ico|png|jpg|gif|svg|eot|ttf|woff|woff2)(\?.+)?$/,
-                loader: 'url?limit=50000,name=images/[name]-[hash:6].[ext]' // inline base64 URLs for <=10kb images, direct URLs for the rest
+                loader: 'url?limit=50000,name=images/[name]-[hash:6].[ext]'
             }
             , {
                 test: /\.js$/,
@@ -69,16 +68,16 @@ const PARAMS_PER_TARGET = {
     DEV: {
         devtool: 'inline-source-map',
         output: {
+            publicPath: 'http://localhost:3000/',
             filename: 'bundle.js'
         },
         plugins: [
         ],
         devServer: {
-            // contentBase: 'dev/',
             port: 3000,
             proxy: {
                 '/user': {
-                    target: 'http://localhost:8081/',
+                    target: 'http://localhost:8080/',
                     secure: false,
                 },
             },
