@@ -23,8 +23,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-	maven { url 'http://10.164.194.139:8081/nexus/content/groups/public/' }
-//	mavenCentral()
+//	maven { url 'http://10.164.194.139:8081/nexus/content/groups/public/' }
+	mavenCentral()
 }
 
 
@@ -33,7 +33,7 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compile("org.springframework.boot:spring-boot-starter-security")
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-	compile("org.springframework.security.oauth:spring-security-oauth2")
+//	compile("org.springframework.security.oauth:spring-security-oauth2")
 	compile("org.springframework.security:spring-security-jwt")
 	compile('mysql:mysql-connector-java')
 	testCompile("org.springframework.boot:spring-boot-starter-test")

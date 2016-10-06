@@ -1,6 +1,5 @@
-.gradle
-/build/
-/logs/
+logs/
+node_modules/
 
 ### STS ###
 .classpath
@@ -11,13 +10,11 @@
 
 ### IntelliJ IDEA ###
 .idea
-*.iws
-*.iml
-*.ipr
+.gradle
+build/
 
 ### NetBeans ###
 nbproject/private/
-build/
 nbbuild/
 dist/
 nbdist/
