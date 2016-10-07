@@ -10,7 +10,7 @@ const DEFAULT_TARGET = 'DIST';
 
 const DEFAULT_PARAMS = {
     entry: [
-        './src/main/frontend/app'
+        './ui-implicit/src/main/frontend/app'
     ],
     output: {
         filename: 'js/[name]-[hash:6].js',
@@ -18,11 +18,9 @@ const DEFAULT_PARAMS = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html'
-        }),
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /zh-cn/),
-        new webpack.ProvidePlugin({
-            moment: 'moment'
+            template: './ui-implicit/main/frontend/index.html',
+            chunksSortMode: 'dependency',
+            minify: false,
         }),
     ],
     module: {
@@ -67,33 +65,26 @@ const PARAMS_PER_TARGET = {
 
     DEV: {
         devtool: 'inline-source-map',
+        metadata: {
+            ENV: 'dev',
+            host: 'localhost',
+            port: 3000
+         },
         output: {
+            path: './ui-implicit/src/main/resources/static/',
             publicPath: 'http://localhost:3000/',
-            filename: 'bundle.js'
+            filename: '[name].bundle.js'
         },
         plugins: [
         ],
         devServer: {
             port: 3000,
+            contentBase: './ui-implicit/src/main/frontend',
             proxy: {
-                '/user': {
-                    target: 'http://localhost:8080/',
-                    secure: false,
-                },
+                '/user': 'http://localhost:8080/'
             },
         },
     },
-
-    BUILD: {
-        output: {
-            path: './build'
-        },
-        devtool: 'source-map',
-        plugins: [
-            new CleanWebpackPlugin(['build'])
-        ]
-    },
-
     DIST: {
         debug: false,
         output: {

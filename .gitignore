@@ -1,5 +1,7 @@
 logs/
 node_modules/
+/authserver/logs/
+/ui-implicit/logs/
 
 ### STS ###
 .classpath
@@ -11,7 +13,9 @@ node_modules/
 ### IntelliJ IDEA ###
 .idea
 .gradle
-build/
+/build/
+/authserver/build/
+/ui-implicit/build/
 
 ### NetBeans ###
 nbproject/private/
@@ -19,3 +23,4 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+

@@ -43,5 +43,12 @@
 <script src="/controllers/profile.js"></script>
 <script src="/controllers/navbar.js"></script>
 <script src="/services/account.js"></script>
+
+<% if (webpackConfig.metadata.ENV === 'dev') { %>
+<!-- webpack dev server reload -->
+<script src="http://<%= webpackConfig.metadata.host %>:<%= webpackConfig.metadata.port %>/webpack-dev-server.js"></script>
+<!-- end webpack dev server reload -->
+<% } %>
+
 </body>
 </html>

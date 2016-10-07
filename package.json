@@ -15,6 +15,8 @@
     "angular-resource": "^1.5.8",
     "angular-route": "^1.5.8",
     "angular-sanitize": "^1.5.8",
+    "angular-toastr": "^2.1.1",
+    "angular-ui-router": "^0.3.1",
     "satellizer": "^0.15.5"
   },
   "devDependencies": {
@@ -33,7 +35,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.22.0",
-    "lodash": "^4.16.3",
+    "lodash": "^4.16.4",
     "minimist": "^1.2.0",
     "ng-annotate": "^1.2.1",
     "ng-annotate-loader": "^0.2.0",
@@ -45,6 +47,6 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.16.1"
+    "webpack-dev-server": "^1.16.2"
   }
 }
