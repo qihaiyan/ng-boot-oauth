@@ -18,7 +18,7 @@ const DEFAULT_PARAMS = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './ui-implicit/main/frontend/index.html',
+            template: './ui-implicit/src/main/frontend/index.html',
             chunksSortMode: 'dependency',
             minify: false,
         }),
@@ -38,7 +38,7 @@ const DEFAULT_PARAMS = {
                 test: /\.js$/,
                 exclude: /(node_modules)/,
                 loader: 'ng-annotate!babel?presets[]=es2015',
-                include: path.join(__dirname, 'src')
+                include: path.join(__dirname, 'ui-implicit/src/main/frontend')
             }
             , {
                 test: /\.css$/,

@@ -3,38 +3,33 @@ import ngMessages from 'angular-messages';
 import ngResource from 'angular-resource';
 import ngAnimate from 'angular-animate';
 import toastr from 'angular-toastr';
-import ui.router from 'angular-ui-router';
-import satellizer from 'angular-satellizer';
+import uirouter from 'angular-ui-router';
+import ngSanitize from 'angular-sanitize';
 import accountServiceModule from './services/account';
-import homeModule from './controllers/home';
-import loginModule from './controllers/login';
-import logoutModule from './controllers/logout';
-import navbarModule from './controllers/navbar';
-import profileModule from './controllers/profile';
+import ctlModule from './controllers/controller.module';
+import 'satellizer';
+import './css/styles.css';
+import './css/angular-toastr.css';
 
 const appModule = angular.module('MyApp', [
   ngMessages,
   ngResource,
   ngAnimate,
   toastr,
-  ui.router,
-  satellizer,
+  uirouter,
+  ngSanitize,
+  'satellizer',
   accountServiceModule,
-  homeModule,
-  loginModule,
-  logoutModule,
-  navbarModule,
-  profileModule,
+  ctlModule,
 ]);
 
 export default appModule;
 
-appModule.config(function($stateProvider, $urlRouterProvider, $authProvider) {
-
+appModule.config(($stateProvider, $urlRouterProvider, $authProvider, $windowProvider) => {
     /**
      * Helper auth functions
      */
-    const skipIfLoggedIn = ['$q', '$auth', function($q, $auth) {
+    const skipIfLoggedIn = ['$q', '$auth', ($q, $auth) => {
       const deferred = $q.defer();
       if ($auth.isAuthenticated()) {
         deferred.reject();
@@ -44,7 +39,7 @@ appModule.config(function($stateProvider, $urlRouterProvider, $authProvider) {
       return deferred.promise;
     }];
 
-    const loginRequired = ['$q', '$location', '$auth', function($q, $location, $auth) {
+    const loginRequired = ['$q', '$location', '$auth', ($q, $location, $auth) => {
       const deferred = $q.defer();
       if ($auth.isAuthenticated()) {
         deferred.resolve();
@@ -60,28 +55,23 @@ appModule.config(function($stateProvider, $urlRouterProvider, $authProvider) {
     $stateProvider
       .state('home', {
         url: '/',
-        controller: 'HomeCtrl',
-        templateUrl: 'partials/home.html'
+        controller: 'HomeCtrl as vm',
+        templateUrl: require('./partials/home.html')
       })
       .state('login', {
         url: '/login',
-        templateUrl: 'partials/login.html',
-        controller: 'LoginCtrl',
+        templateUrl: require('partials/login.html'),
+        controller: 'LoginCtrl as vm',
         resolve: {
-          skipIfLoggedIn: skipIfLoggedIn
+          skipIfLoggedIn
         }
-      })
-      .state('logout', {
-        url: '/logout',
-        template: null,
-        controller: 'LogoutCtrl'
       })
       .state('profile', {
         url: '/profile',
-        templateUrl: 'partials/profile.html',
-        controller: 'ProfileCtrl',
+        templateUrl: require('partials/profile.html'),
+        controller: 'ProfileCtrl as vm',
         resolve: {
-          loginRequired: loginRequired
+          loginRequired
         }
       });
 //    $urlRouterProvider.otherwise('/');
@@ -99,7 +89,31 @@ appModule.config(function($stateProvider, $urlRouterProvider, $authProvider) {
       url: 'http://localhost:9999/uaa',
       clientId: 'acme',
       responseType: 'token',
-      redirectUri: window.location.origin || window.location.protocol + '//' + window.location.host,
+      redirectUri: $windowProvider.$get().location.origin || `${$windowProvider.$get().location.protocol}//${$windowProvider.$get().location.host}`,
       authorizationEndpoint: 'http://localhost:9999/uaa/oauth/authorize'
     });
   });
+
+class AppCtrl {
+  constructor($auth, $location, toastr) {
+    this.$auth = $auth;
+    this.$location = $location;
+    this.toastr = toastr;
+  }
+
+  isAuthenticated() {
+    return this.$auth.isAuthenticated();
+  }
+
+  Logout() {
+    if (!this.$auth.isAuthenticated()) { return; }
+    this.$auth.logout()
+      .then(() => {
+        this.toastr.info('You have been logged out');
+        this.$location.path('/');
+      });
+  }
+}
+
+AppCtrl.$inject = ['$auth', '$location', 'toastr'];
+appModule.controller('AppCtrl', AppCtrl);

@@ -1,14 +1,21 @@
-angular.module('MyApp')
-  .controller('ProfileCtrl', function($scope, $auth, toastr, Account) {
-    $scope.getProfile = function() {
-      Account.getProfile()
-        .then(function(response) {
-          $scope.user = response.data;
-        })
-        .catch(function(response) {
-          toastr.error(response.data.message, response.status);
-        });
-    };
+class ProfileCtrl {
+  constructor($scope, $auth, toastr, accountService) {
+    this.$scope = $scope;
+    this.$auth = $auth;
+    this.toastr = toastr;
+    this.accountService = accountService;
+  }
 
-    $scope.getProfile();
-  });
+  getProfile() {
+    this.accountService.getProfile()
+        .then((response) => {
+          this.user = response.data;
+        })
+        .catch((response) => {
+          this.toastr.error(response.data.message, response.status);
+        });
+  }
+}
+ProfileCtrl.$inject = ['$scope', '$auth', 'toastr', 'accountService'];
+
+export default ProfileCtrl;

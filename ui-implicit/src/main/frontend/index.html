@@ -3,46 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Satellizer</title>
-  <link href="favicon.png" rel="shortcut icon">
+  <title>oauth2 demo with angularjs and springboot</title>
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/stylesheets/angular-toastr.css" rel="stylesheet">
-  <link href="/stylesheets/styles.css" rel="stylesheet">
 </head>
 <body>
-<div ng-controller="NavbarCtrl" class="navbar navbar-default navbar-static-top">
+<div ng-controller="AppCtrl as vm" class="navbar navbar-default navbar-static-top">
   <ul class="nav navbar-nav">
     <li><a href="/#/">Home</a></li>
-    <li ng-if="isAuthenticated()"><a href="/#/profile">Profile</a></li>
+    <li ng-if="vm.isAuthenticated()"><a href="/#/profile">Profile</a></li>
   </ul>
-  <ul ng-if="!isAuthenticated()" class="nav navbar-nav pull-right">
+  <ul ng-if="!vm.isAuthenticated()" class="nav navbar-nav pull-right">
     <li><a href="/#/login">Login</a></li>
   </ul>
-  <ul ng-if="isAuthenticated()" class="nav navbar-nav pull-right">
-    <li><a href="/#/logout">Logout</a></li>
+  <ul ng-if="vm.isAuthenticated()" class="nav navbar-nav pull-right">
+    <li><a ng-click="vm.Logout()">Logout</a></li>
   </ul>
 </div>
 
 <div ui-view></div>
-
-<!-- Third-party Libraries -->
-<script src="/vendor/angular.js"></script>
-<script src="/vendor/angular-animate.js"></script>
-<script src="/vendor/angular-messages.js"></script>
-<script src="/vendor/angular-resource.js"></script>
-<script src="/vendor/angular-sanitize.js"></script>
-<script src="/vendor/angular-ui-router.js"></script>
-<script src="/vendor/angular-toastr.tpls.js"></script>
-<script src="/vendor/satellizer.js"></script>
-
-<!-- Application Code -->
-<script src="/app.js"></script>
-<script src="/controllers/home.js"></script>
-<script src="/controllers/login.js"></script>
-<script src="/controllers/logout.js"></script>
-<script src="/controllers/profile.js"></script>
-<script src="/controllers/navbar.js"></script>
-<script src="/services/account.js"></script>
 
 <% if (webpackConfig.metadata.ENV === 'dev') { %>
 <!-- webpack dev server reload -->
