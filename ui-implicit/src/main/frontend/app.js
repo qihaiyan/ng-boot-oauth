@@ -60,7 +60,7 @@ appModule.config(($stateProvider, $urlRouterProvider, $authProvider, $windowProv
       })
       .state('login', {
         url: '/login',
-        templateUrl: require('partials/login.html'),
+        templateUrl: require('./partials/login.html'),
         controller: 'LoginCtrl as vm',
         resolve: {
           skipIfLoggedIn
@@ -68,7 +68,7 @@ appModule.config(($stateProvider, $urlRouterProvider, $authProvider, $windowProv
       })
       .state('profile', {
         url: '/profile',
-        templateUrl: require('partials/profile.html'),
+        templateUrl: require('./partials/profile.html'),
         controller: 'ProfileCtrl as vm',
         resolve: {
           loginRequired

@@ -27,7 +27,7 @@ const DEFAULT_PARAMS = {
         loaders: [
             {
                 test: /\.html$/,
-                exclude: /(index\.html$|home\.html$)/,
+                exclude: /(index\.html$$)/,
                 loader: 'file?name=partials/[name]-[hash:6].[ext]'
             }
             , {
@@ -64,12 +64,12 @@ const DEFAULT_PARAMS = {
 const PARAMS_PER_TARGET = {
 
     DEV: {
-        devtool: 'inline-source-map',
+        // devtool: 'inline-source-map',
         metadata: {
             ENV: 'dev',
             host: 'localhost',
             port: 3000
-         },
+        },
         output: {
             path: './ui-implicit/src/main/resources/static/',
             publicPath: 'http://localhost:3000/',
@@ -80,9 +80,9 @@ const PARAMS_PER_TARGET = {
         devServer: {
             port: 3000,
             contentBase: './ui-implicit/src/main/frontend',
-            proxy: {
-                '/user': 'http://localhost:8080/'
-            },
+            // proxy: {
+            //     '/user': 'http://localhost:8080/'
+            // },
         },
     },
     DIST: {

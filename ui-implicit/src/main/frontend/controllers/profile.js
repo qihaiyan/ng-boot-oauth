@@ -4,16 +4,14 @@ class ProfileCtrl {
     this.$auth = $auth;
     this.toastr = toastr;
     this.accountService = accountService;
-  }
-
-  getProfile() {
+    console.log('get profile');
     this.accountService.getProfile()
-        .then((response) => {
-          this.user = response.data;
-        })
-        .catch((response) => {
-          this.toastr.error(response.data.message, response.status);
-        });
+      .then((response) => {
+        this.user = response.data;
+      })
+      .catch((response) => {
+        this.toastr.error(response.data.message, response.status);
+      });
   }
 }
 ProfileCtrl.$inject = ['$scope', '$auth', 'toastr', 'accountService'];
