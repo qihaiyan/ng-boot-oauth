@@ -10,7 +10,7 @@ const DEFAULT_TARGET = 'DIST';
 
 const DEFAULT_PARAMS = {
     entry: [
-        './ui-implicit/src/main/frontend/app'
+        './src/main/frontend/app'
     ],
     output: {
         filename: 'js/[name]-[hash:6].js',
@@ -18,7 +18,7 @@ const DEFAULT_PARAMS = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './ui-implicit/src/main/frontend/index.html',
+            template: './src/main/frontend/index.html',
             chunksSortMode: 'dependency',
             minify: false,
         }),
@@ -38,7 +38,7 @@ const DEFAULT_PARAMS = {
                 test: /\.js$/,
                 exclude: /(node_modules)/,
                 loader: 'ng-annotate!babel?presets[]=es2015',
-                include: path.join(__dirname, 'ui-implicit/src/main/frontend')
+                include: path.join(__dirname, 'src/main/frontend')
             }
             , {
                 test: /\.css$/,
@@ -71,15 +71,16 @@ const PARAMS_PER_TARGET = {
             port: 3000
         },
         output: {
-            path: './ui-implicit/src/main/resources/static/',
+            path: './src/main/resources/static/',
             publicPath: 'http://localhost:3000/',
             filename: '[name].bundle.js'
         },
         plugins: [
+            new CleanWebpackPlugin(['src/main/resources/static']),
         ],
         devServer: {
             port: 3000,
-            contentBase: './ui-implicit/src/main/frontend',
+            contentBase: './src/main/frontend',
             headers: {
                 'Access-Control-Allow-Origin': 'http://localhost:8080',
                 'Access-Control-Allow-Credentials': 'true',
@@ -92,12 +93,17 @@ const PARAMS_PER_TARGET = {
         },
     },
     DIST: {
+        metadata: {
+            ENV: 'dist',
+        },
+
         debug: false,
         output: {
             path: path.join(__dirname, 'dist'),
         },
         plugins: [
             new CleanWebpackPlugin(['dist']),
+            new CleanWebpackPlugin(['src/main/resources/static']),
             new webpack.optimize.UglifyJsPlugin({
                 compressor: {
                     warnings: false

@@ -1,7 +1,9 @@
 logs/
-node_modules/
 /authserver/logs/
 /ui-implicit/logs/
+/ui-implicit/dist/
+/ui-implicit/node_modules/
+/ui-implicit/src/main/resources/static/
 
 ### STS ###
 .classpath

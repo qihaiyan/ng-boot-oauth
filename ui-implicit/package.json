@@ -4,7 +4,7 @@
   "description": "oauth2 demo with angularjs and springboot",
   "scripts": {
     "dist": "webpack --TARGET=DIST",
-    "dev": "webpack-dev-server --compress --colors --inline --TARGET=DEV"
+    "dev": "webpack --TARGET=DEV && webpack-dev-server --compress --colors --inline --watch --TARGET=DEV"
   },
   "dependencies": {
     "angular": "^1.5.8",

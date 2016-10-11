@@ -3,27 +3,41 @@ buildscript {
 		springBootVersion = '1.4.1.RELEASE'
 	}
 	repositories {
-		// maven { url 'http://10.164.194.139:8081/nexus/content/groups/public/' }
 		mavenCentral()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("com.moowork.gradle:gradle-node-plugin:0.13")
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'com.moowork.node'
+
+task dist(type: NpmTask) {
+	inputs.dir(new File('src'))
+	outputs.dir(new File('dist'))
+	args = ['run', 'dist']
+}
 
 jar {
 	baseName = 'ng-boot-oauth'
 	version = '0.0.1'
+	from('./dist') {
+		into 'static'
+	}
+	dependsOn(dist)
 }
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-//	maven { url 'http://10.164.194.139:8081/nexus/content/groups/public/' }
 	mavenCentral()
 }
 
