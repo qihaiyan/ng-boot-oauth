@@ -80,6 +80,12 @@ const PARAMS_PER_TARGET = {
         devServer: {
             port: 3000,
             contentBase: './ui-implicit/src/main/frontend',
+            headers: {
+                'Access-Control-Allow-Origin': 'http://localhost:8080',
+                'Access-Control-Allow-Credentials': 'true',
+                'Access-Control-Allow-Headers': 'authorization',
+                'Access-Control-Allow-Methods': 'GET'
+            },
             // proxy: {
             //     '/user': 'http://localhost:8080/'
             // },

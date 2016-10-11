@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "oauth2 demo with angularjs and springboot",
   "scripts": {
-    "bundle": "webpack --TARGET=DIST",
+    "dist": "webpack --TARGET=DIST",
     "dev": "webpack-dev-server --compress --colors --inline --TARGET=DEV"
   },
   "dependencies": {
