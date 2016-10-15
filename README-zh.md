@@ -14,7 +14,7 @@ oauth2 demo 程序，使用了angularjs 1.x 和 springboot框架。
 * ES6
 * AngularJs 1.x
 * webpack dev server hot-reload
-(通过在ndex.html中引用web-dev-server的js文件，在DEV模式下实现自动加载功能)
+(通过在index.html中引用web-dev-server的js文件，在DEV模式下实现自动加载功能)
 ```
 <% if (webpackConfig.metadata.ENV === 'dev') { %>
 <!-- webpack dev server reload -->
