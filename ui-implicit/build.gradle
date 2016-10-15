@@ -26,7 +26,7 @@ task dist(type: NpmTask) {
 }
 
 jar {
-	baseName = 'ng-boot-oauth'
+	baseName = 'ng-boot-oauth-ui-implicit'
 	version = '0.0.1'
 	from('./dist') {
 		into 'static'

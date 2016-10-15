@@ -15,7 +15,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
 jar {
-	baseName = 'ng-boot-oauth'
+	baseName = 'ng-boot-oauth-server'
 	version = '0.0.1'
 }
 
