@@ -1,5 +1,7 @@
 # ng-boot-oauth
-An oauth2 demo with angularjs and springboot
+An oauth2 demo with angularjs and springboot.
+
+Default username is `admin`, and password is `111111`.
 ## 1. Features
 ### Modules
 
