@@ -1,18 +1,20 @@
 # ng-boot-oauth
 oauth2 demo 程序，使用了angularjs 1.x 和 springboot框架。
+
+默认的用户名是 `admin`, 密码是 `111111`
 ## 1. 特点
 ### 模块
 
 项目包括3个模块：
 * authserver
 * ui (oauth2 code flow的客户端应用)
-* ui-implicit (A client using oauth2 implicit flow的客户端应用，有一个独立的前端模块)
+* ui-implicit (oauth2 implicit flow的客户端应用，有一个独立的前端模块)
 
 ### 前端
 * ES6
 * AngularJs 1.x
 * webpack dev server hot-reload
-(通过将在ndex.html中引用web-dev-server的js文件，在DEV模式下实现自动加载功能)
+(通过在ndex.html中引用web-dev-server的js文件，在DEV模式下实现自动加载功能)
 ```
 <% if (webpackConfig.metadata.ENV === 'dev') { %>
 <!-- webpack dev server reload -->
@@ -56,9 +58,9 @@ cd ui-implicit
 ./gradlew bootRun
 ```
 
-* RUNNING DEV SERVER
+* 运行前端模块
 
-如果是运行第一次程序，需要先安装依赖。
+如果是第一次运行程序，需要先安装依赖。
 ```bash
 cd ui-implicit
 npm install
@@ -72,9 +74,9 @@ npm run dev
 
 * CORS 问题
 
-在DEV模式下运行 ui-implicit 前端模块时，如果采用默认配置会出现CORS错误。
+在DEV模式下运行 ui-implicit 前端模块时，如果采用webpack-dev-server的默认配置会出现CORS错误。
 
-需要在webpack.config.js中调整dev-server的配置，后端API调用的代理也可以在这儿进行配置：
+需要在webpack.config.js中调整dev-server的配置，调用后端API的代理也可以在这儿进行配置：
 ```
 devServer: {
             port: 3000,
