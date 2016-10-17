@@ -72,9 +72,7 @@ npm run dev
 
 * CORS
 
-Without specific configuration, when running ui-implicit module in development mode, we will get the CORS error.
-
-So we use this configuration for dev-server in webpack.config.js. And the proxies for api calls can be configured here.
+We use the following configuration for dev-server in webpack.config.js to avoid the CORS error. And the proxies for api calls can also be configured here.
 ```
 devServer: {
             port: 3000,
