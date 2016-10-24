@@ -75,9 +75,9 @@ const PARAMS_PER_TARGET = {
             publicPath: 'http://localhost:3000/',
             filename: '[name].bundle.js'
         },
-        plugins: [
-            new CleanWebpackPlugin(['src/main/resources/static']),
-        ],
+//        plugins: [
+//            new CleanWebpackPlugin(['src/main/resources/static']),
+//        ],
         devServer: {
             port: 3000,
             contentBase: './src/main/frontend',
