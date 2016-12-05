@@ -1,4 +1,6 @@
 # ng-boot-oauth
+[中文介绍](README-zh.md)
+
 An oauth2 demo with angularjs and springboot.
 
 Default username is `admin`, and password is `111111`.
