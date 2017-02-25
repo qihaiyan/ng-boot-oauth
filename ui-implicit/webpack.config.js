@@ -17,6 +17,15 @@ const DEFAULT_PARAMS = {
         sourceMapFilename: 'js/[name]-[hash:6].map'
     },
     plugins: [
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                postcss: [
+                    autoprefixer({
+                        browsers: ['last 2 versions']
+                    })
+                ]
+            }
+        }),
         new HtmlWebpackPlugin({
             template: './src/main/frontend/index.html',
             chunksSortMode: 'dependency',
@@ -24,60 +33,72 @@ const DEFAULT_PARAMS = {
         }),
     ],
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.html$/,
                 exclude: /(index\.html$$)/,
-                loader: 'file?name=partials/[name]-[hash:6].[ext]'
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: 'partials/[name]-[hash:6].[ext]'
+                        }
+                    }
+                ]
             }
             , {
                 test: /\.(ico|png|jpg|gif|svg|eot|ttf|woff|woff2)(\?.+)?$/,
-                loader: 'url?limit=50000,name=images/[name]-[hash:6].[ext]'
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 50000,
+                            name: 'images/[name]-[hash:6].[ext]'
+                        }
+                    }
+                ]
             }
             , {
                 test: /\.js$/,
-                exclude: /(node_modules)/,
-                loader: 'ng-annotate!babel?presets[]=es2015',
+                exclude: [
+                    path.resolve(__dirname, 'node_modules')
+                ],
+                use: [
+                    'ng-annotate-loader',
+                    'babel-loader'
+                ],
                 include: path.join(__dirname, 'src/main/frontend')
             }
             , {
                 test: /\.css$/,
-                loader: 'style!css'
+                use: [
+                    'style-loader',
+                    'css-loader'
+                ]
             }
             , {
                 test: /\.scss$/,
-                loader: 'style!css!autoprefixer!sass'
-            }
-            , {
-                test: /\.json/,
-                loaders: ['json-loader']
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'autoprefixer-loader',
+                    'sass-loader'
+                ]
             }
         ]
     },
-    postcss: [
-        autoprefixer({
-            browsers: ['last 2 versions']
-        })
-    ],
 };
 
 const PARAMS_PER_TARGET = {
 
     DEV: {
-        // devtool: 'inline-source-map',
-        metadata: {
-            ENV: 'dev',
-            host: 'localhost',
-            port: 3000
-        },
         output: {
-            path: './src/main/resources/static/',
+            path: path.resolve(__dirname, 'src/main/resources/static'),
             publicPath: 'http://localhost:3000/',
-            filename: '[name].bundle.js'
+            filename: 'bundle.js'
         },
-//        plugins: [
-//            new CleanWebpackPlugin(['src/main/resources/static']),
-//        ],
+        plugins: [
+        ],
         devServer: {
             port: 3000,
             contentBase: './src/main/frontend',
@@ -87,17 +108,12 @@ const PARAMS_PER_TARGET = {
                 'Access-Control-Allow-Headers': 'authorization',
                 'Access-Control-Allow-Methods': 'GET'
             },
-            // proxy: {
-            //     '/user': 'http://localhost:8080/'
-            // },
+            proxy: {
+                '/user': 'http://localhost:8080/'
+            },
         },
     },
     DIST: {
-        metadata: {
-            ENV: 'dist',
-        },
-
-        debug: false,
         output: {
             path: path.join(__dirname, 'dist'),
         },
@@ -105,16 +121,14 @@ const PARAMS_PER_TARGET = {
             new CleanWebpackPlugin(['dist']),
             new CleanWebpackPlugin(['src/main/resources/static']),
             new webpack.optimize.UglifyJsPlugin({
-                compressor: {
-                    warnings: false
-                }
+                sourceMap: true
             }),
         ]
     }
 };
 
 function _resolveBuildTarget(defaultTarget) {
-    let target = minimist(process.argv.slice(2)).TARGET;
+    let target = minimist(process.argv.slice(2)).env.TARGET;
     if (!target) {
         console.log('No build target provided, using default target instead\n\n');
         target = defaultTarget;

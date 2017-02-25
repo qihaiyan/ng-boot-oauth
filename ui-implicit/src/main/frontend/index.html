@@ -22,9 +22,9 @@
 
 <div ui-view></div>
 
-<% if (webpackConfig.metadata.ENV === 'dev') { %>
+<% if (process.env.NODE_ENV === 'dev') { %>
 <!-- webpack dev server reload -->
-<script src="http://<%= webpackConfig.metadata.host %>:<%= webpackConfig.metadata.port %>/webpack-dev-server.js"></script>
+<script src="http://localhost:3000/webpack-dev-server.js"></script>
 <!-- end webpack dev server reload -->
 <% } %>
 
