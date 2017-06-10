@@ -91,7 +91,7 @@ devServer: {
         },
 ```
 
-Now we can visit the app at `http://localhost:3000`
+Now we can visit the app at `http://localhost:8080`
 
 ## 3. RUNNING IN PRODUCTION MODE
 Compile and package project:
