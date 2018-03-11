@@ -4,6 +4,11 @@ ui-implicit/logs/
 ui-implicit/dist/
 ui-implicit/node_modules/
 ui-implicit/src/main/resources/static/
+/authserver/out/
+/authserver/logs/
+/authserver/build/
+ui-implicit/out/
+ui/out/
 
 ### STS ###
 .classpath
@@ -27,6 +32,3 @@ dist/
 nbdist/
 .nb-gradle/
 
-/authserver/out/
-/authserver/logs/
-/authserver/build/
