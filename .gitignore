@@ -27,3 +27,6 @@ dist/
 nbdist/
 .nb-gradle/
 
+/authserver/out/
+/authserver/logs/
+/authserver/build/
