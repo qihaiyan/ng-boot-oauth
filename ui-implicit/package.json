@@ -12,7 +12,7 @@
     "dev": "webpack --env.TARGET=DEV && webpack-dev-server --compress --colors --inline --watch --env.TARGET=DEV"
   },
   "dependencies": {
-    "angular": "^1.5.8",
+    "angular": "^1.6.0",
     "angular-animate": "^1.5.8",
     "angular-aria": "^1.5.8",
     "angular-messages": "^1.5.8",
