@@ -40,7 +40,7 @@
     "file-loader": "^0.10.1",
     "html-webpack-plugin": "^2.28.0",
     "lodash": "^4.17.4",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.2",
     "ng-annotate": "^1.2.1",
     "ng-annotate-loader": "^0.2.0",
     "null-loader": "^0.1.1",
