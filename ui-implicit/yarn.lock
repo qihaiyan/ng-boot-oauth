@@ -108,9 +108,9 @@ angular-ui-router@^0.3.1:
   dependencies:
     angular "^1.0.8"
 
-angular@^1.0.8, angular@^1.5.8:
-  version "1.5.8"
-  resolved "https://registry.yarnpkg.com/angular/-/angular-1.5.8.tgz#925a5392b8c212d09572dc446db7e01264e094cb"
+angular@^1.0.8, angular@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.8.0.tgz#b1ec179887869215cab6dfd0df2e42caa65b1b51"
 
 ansi-escapes@^1.1.0:
   version "1.4.0"
