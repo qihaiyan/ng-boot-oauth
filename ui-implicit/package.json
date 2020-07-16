@@ -39,7 +39,7 @@
     "express": "^4.14.0",
     "file-loader": "^0.10.1",
     "html-webpack-plugin": "^2.28.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "minimist": "^1.2.3",
     "ng-annotate": "^1.2.1",
     "ng-annotate-loader": "^0.2.0",
