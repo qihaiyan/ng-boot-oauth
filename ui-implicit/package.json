@@ -36,7 +36,7 @@
     "eslint": "^3.16.1",
     "eslint-config-airbnb-base": "^11.1.0",
     "eslint-plugin-import": "^2.2.0",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "file-loader": "^0.10.1",
     "html-webpack-plugin": "^2.28.0",
     "lodash": "^4.17.21",
