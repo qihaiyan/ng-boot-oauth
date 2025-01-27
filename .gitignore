@@ -1,14 +1,16 @@
-logs/
-authserver/logs/
-ui-implicit/logs/
-ui-implicit/dist/
-ui-implicit/node_modules/
-ui-implicit/src/main/resources/static/
-/authserver/out/
+/logs/
 /authserver/logs/
+/authserver/out/
 /authserver/build/
-ui-implicit/out/
-ui/out/
+/ui-implicit/logs/
+/ui-implicit/dist/
+/ui-implicit/node_modules/
+/ui-implicit/src/main/resources/static/
+/ui-implicit/out/
+/ui/out/
+/build/
+/ui/build/
+/ui-implicit/build/
 
 ### STS ###
 .classpath
@@ -20,15 +22,3 @@ ui/out/
 ### IntelliJ IDEA ###
 .idea
 .gradle
-build/
-authserver/build/
-ui/build/
-ui-implicit/build/
-
-### NetBeans ###
-nbproject/private/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-

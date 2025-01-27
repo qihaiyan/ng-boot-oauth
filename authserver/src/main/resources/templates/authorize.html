@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>hiease authserver</title>
 </head>
@@ -9,7 +8,8 @@
     <h2>Please Confirm</h2>
 
     <p>
-        Do you authorize <span th:text="${authorizationRequest.clientId}"></span> at  <span th:text="${authorizationRequest.redirectUri}"></span> to access your
+        Do you authorize <span th:text="${authorizationRequest.clientId}"></span> at <span
+            th:text="${authorizationRequest.redirectUri}"></span> to access your
         protected resources
         with scope <span th:text="${authorizationRequest.scope}"/>.
     </p>
