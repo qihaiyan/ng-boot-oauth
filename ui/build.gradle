@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.4.RELEASE'
+		springBootVersion = '3.3.6'
 	}
 	repositories {
 		mavenCentral()
@@ -11,26 +11,29 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
-jar {
-	baseName = 'ng-boot-oauth-ui'
-	version = '0.0.1'
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	testCompileOnly {
+		extendsFrom testAnnotationProcessor
+	}
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	compile("org.springframework.boot:spring-boot-starter-actuator")
-	compile("org.springframework.boot:spring-boot-starter-web")
-	compile("org.springframework.boot:spring-boot-starter-security")
-	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-	compile("org.springframework.security.oauth:spring-security-oauth2")
-	compile("org.springframework.security:spring-security-jwt")
-	testCompile("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation('org.springframework.boot:spring-boot-starter-oauth2-resource-server')
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
