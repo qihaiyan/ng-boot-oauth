@@ -13,7 +13,7 @@ The project contains 3 modules
 * ui-spa (A client using oauth2 pkce flow, with a standalone frontend module)
 
 ### Frontend
-* Angular 18
+* Angular 19
 
 ### Backend
 * Gradle Build Tool 
@@ -22,7 +22,7 @@ The project contains 3 modules
 * Thymeleaf server-side Java template engine
 
 ## 2. RUNNING IN DEVELOPMENT MODE
-Note that **ui** module and **ui-implicit** module can't be running at the same time, because they use the same port 8080.
+Note that **ui** module and **ui-spa** module can't be running at the same time, because they use the same port 8080.
 ### GET THE CODE
 ```bash
 git clone https://github.com/qihaiyan/ng-boot-oauth.git
@@ -42,66 +42,24 @@ cd ui
 ```
 Now we can visit the app at `http://localhost:8080`
 
-### RUNNING ui-implicit MODULE
+### RUNNING ui-spa MODULE
 
 * RUNNING BACKEND SERVER
 ```bash
-cd ui-implicit
+cd ui-spa
 ./gradlew bootRun
 ```
 
-If it's the first time to run ui-implicit module, install dependencies at first.
+If it's the first time to run ui-spa module, install dependencies at first.
 ```bash
-cd ui-implicit
+cd ui-spa
 npm install
 ```
 
 * RUNNING DEV SERVER
 ```bash
-cd ui-implicit
+cd ui-spa
 npm run dev
 ```
 
-* CORS
-
-We use the following configuration for dev-server in webpack.config.js to avoid the CORS error. And the proxies for api calls can also be configured here.
-```
-devServer: {
-            port: 3000,
-            contentBase: './src/main/frontend',
-            headers: {
-                'Access-Control-Allow-Origin': 'http://localhost:8080',
-                'Access-Control-Allow-Credentials': 'true',
-                'Access-Control-Allow-Headers': 'authorization',
-                'Access-Control-Allow-Methods': 'GET'
-            },
-            // proxy: {
-            //     '/user': 'http://localhost:8080/'
-            // },
-        },
-```
-
-Now we can visit the app at `http://localhost:8080`
-
-## 3. RUNNING IN PRODUCTION MODE
-Compile and package project:
-```bash
-gradle build
-```
-Then run auth server:
-```
-cd authserver/
-java -jar ./build/libs/ng-boot-oauth-0.0.1.jar
-```
-Then run ui server:
-```
-cd ui/
-java -jar ./build/libs/ng-boot-oauth-ui-0.0.1.jar
-```
-Or run ui-implicit server:
-```
-cd ui-implicit/
-java -jar ./build/libs/ng-boot-oauth-ui-implicit-0.0.1.jar
-```
-
-Now we can visit the app at `http://localhost:8080`
+Now we can visit the app at `http://localhost:4200`
