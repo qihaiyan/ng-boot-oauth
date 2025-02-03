@@ -3,6 +3,7 @@ import {NgIf, NgForOf} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {catchError, of} from 'rxjs';
 import {environment} from "./environment";
+import { provideAuth } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ import {environment} from "./environment";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  private readonly oidcSecurityService = inject(OidcSecurityService);
   isAuthenticated: boolean = false;
   userName: string = '';
   messages: string[] = [];
@@ -26,7 +28,8 @@ export class AppComponent implements OnInit {
 
   login(): void {
     // The Backend is configured to trigger login when unauthenticated
-    window.location.href = environment.backendBaseUrl;
+//     window.location.href = environment.backendBaseUrl;
+    this.oidcSecurityService.authorize();
   }
 
   logout(): void {

@@ -11,6 +11,7 @@
 /ui-spa/src/main/resources/static/
 /ui-spa/out/
 /ui-spa/build/
+/ui-spa/.angular/
 /ui/out/
 /build/
 /ui/build/
