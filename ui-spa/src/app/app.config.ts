@@ -1,16 +1,42 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import {provideHttpClient, withInterceptors} from '@angular/common/http';
-
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ApplicationConfig } from '@angular/core';
+import {
+  provideRouter,
+  withEnabledBlockingInitialNavigation,
+} from '@angular/router';
+import {
+  LogLevel,
+  authInterceptor,
+  autoLoginPartialRoutesGuard,
+  provideAuth,
+} from 'angular-auth-oidc-client';
 import { routes } from './app.routes';
-import { withCredentialsInterceptor } from './http.interceptors';
-import { authConfig } from './auth/auth.config';
-import { provideAuth } from 'angular-auth-oidc-client';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideHttpClient(withInterceptors([withCredentialsInterceptor])), provideAuth(authConfig)
-  ]
+    provideHttpClient(withInterceptors([authInterceptor()])),
+    provideAuth({
+      config: {
+        triggerAuthorizationResultEvent: true,
+        postLoginRoute: '/',
+        forbiddenRoute: '/forbidden',
+        unauthorizedRoute: '/unauthorized',
+        logLevel: LogLevel.Debug,
+        historyCleanupOff: true,
+        authority: 'http://localhost:8080',
+        authWellknownEndpointUrl: 'http://localhost:8080/.well-known/openid-configuration',
+        redirectUrl: window.location.origin,
+        postLogoutRedirectUri: window.location.origin,
+        clientId: 'spa-client',
+        scope: 'openid profile email',
+        responseType: 'code',
+        silentRenew: true,
+        useRefreshToken: true,
+      },
+    }),
+    provideRouter(
+      routes,
+      withEnabledBlockingInitialNavigation()
+    ),
+  ],
 };

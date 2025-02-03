@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ti": {
+    "ui-spa": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ti",
+            "outputPath": "dist/ui-spa",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -59,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ti:build:production"
+              "buildTarget": "ui-spa:build:production"
             },
             "development": {
-              "buildTarget": "ti:build:development"
+              "buildTarget": "ui-spa:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {NgIf, NgForOf} from '@angular/common';
-import {HttpClient} from '@angular/common/http';
-import {catchError, of} from 'rxjs';
-import {environment} from "./environment";
-import { provideAuth } from 'angular-auth-oidc-client';
+import { Component, OnInit, inject } from '@angular/core';
+import { NgIf, NgForOf } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { catchError, of } from 'rxjs';
+import { environment } from "./environment";
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-root',
@@ -22,27 +22,28 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUserInfo();
-    this.getMessages();
+    this.oidcSecurityService
+      .checkAuth()
+      .subscribe(({ isAuthenticated, accessToken }) => {
+        console.log('app authenticated', isAuthenticated);
+        console.log(`Current access token is '${accessToken}'`);
+        this.isAuthenticated = isAuthenticated;
+      });
+    //     this.getUserInfo();
+    //     this.getMessages();
   }
 
   login(): void {
     // The Backend is configured to trigger login when unauthenticated
-//     window.location.href = environment.backendBaseUrl;
+    //     window.location.href = environment.backendBaseUrl;
     this.oidcSecurityService.authorize();
   }
 
   logout(): void {
-    this.http.post('/logout', null)
-      .pipe(catchError((error) => {
-        console.error(error);
-        return of(null);
-      }))
-      .subscribe(() => {
-        this.isAuthenticated = false;
-        this.userName = '';
-        this.messages = [];
-      });
+    this.oidcSecurityService.logoff().subscribe((result) => {
+      console.log(result);
+      this.isAuthenticated = false;
+    });
   }
 
   getUserInfo(): void {
@@ -62,7 +63,7 @@ export class AppComponent implements OnInit {
   authorizeMessages(): void {
     // Trigger the Backend to perform the authorization_code grant flow.
     // After authorization is complete, the Backend will redirect back to this app.
-    window.location.href = environment.backendBaseUrl + "/oauth2/authorization/messaging-client-authorization-code";
+    window.location.href = environment.backendBaseUrl + "/oauth2/authorization/messaging-client";
   }
 
   getMessages(): void {

@@ -80,6 +80,7 @@ public class AuthorizationServerConfig {
                                         authorizationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI))
                                 .oidc(Customizer.withDefaults())    // Enable OpenID Connect 1.0
                 )
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((authorize) ->
                         authorize.anyRequest().authenticated()
                 )
@@ -150,11 +151,23 @@ public class AuthorizationServerConfig {
                 )
                 .build();
 
+        RegisteredClient publicClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("spa-client")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("http://localhost:4200")
+                .postLogoutRedirectUri("http://localhost:4200")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .scope(OidcScopes.EMAIL)
+                .build();
+
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.save(messagingClient);
         registeredClientRepository.save(deviceClient);
         registeredClientRepository.save(tokenExchangeClient);
         registeredClientRepository.save(mtlsDemoClient);
+        registeredClientRepository.save(publicClient);
 
         return registeredClientRepository;
     }
