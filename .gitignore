@@ -2,15 +2,18 @@
 /authserver/logs/
 /authserver/out/
 /authserver/build/
-/ui-implicit/logs/
-/ui-implicit/dist/
-/ui-implicit/node_modules/
-/ui-implicit/src/main/resources/static/
-/ui-implicit/out/
+/resourceserver/logs/
+/resourceserver/out/
+/resourceserver/build/
+/ui-spa/logs/
+/ui-spa/dist/
+/ui-spa/node_modules/
+/ui-spa/src/main/resources/static/
+/ui-spa/out/
+/ui-spa/build/
 /ui/out/
 /build/
 /ui/build/
-/ui-implicit/build/
 
 ### STS ###
 .classpath

@@ -1,13 +1,13 @@
 package demo.config;
 
-import demo.authentication.DeviceClientAuthenticationProvider;
-import demo.federation.FederatedIdentityIdTokenCustomizer;
-import demo.jose.Jwks;
-import demo.web.authentication.DeviceClientAuthenticationConverter;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import demo.authentication.DeviceClientAuthenticationProvider;
+import demo.federation.FederatedIdentityIdTokenCustomizer;
+import demo.jose.Jwks;
+import demo.web.authentication.DeviceClientAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -53,22 +53,6 @@ public class AuthorizationServerConfig {
             HttpSecurity http, RegisteredClientRepository registeredClientRepository,
             AuthorizationServerSettings authorizationServerSettings) throws Exception {
 
-        /*
-         * This sample demonstrates the use of a public client that does not
-         * store credentials or authenticate with the authorization server.
-         *
-         * The following components show how to customize the authorization
-         * server to allow for device clients to perform requests to the
-         * OAuth 2.0 Device Authorization Endpoint and Token Endpoint without
-         * a clientId/clientSecret.
-         *
-         * CAUTION: These endpoints will not require any authentication, and can
-         * be accessed by any client that has a valid clientId.
-         *
-         * It is therefore RECOMMENDED to carefully monitor the use of these
-         * endpoints and employ any additional protections as needed, which is
-         * outside the scope of this sample.
-         */
         DeviceClientAuthenticationConverter deviceClientAuthenticationConverter =
                 new DeviceClientAuthenticationConverter(
                         authorizationServerSettings.getDeviceAuthorizationEndpoint());
@@ -99,8 +83,6 @@ public class AuthorizationServerConfig {
                 .authorizeHttpRequests((authorize) ->
                         authorize.anyRequest().authenticated()
                 )
-                // Redirect to the /login page when not authenticated from the authorization endpoint
-                // NOTE: DefaultSecurityConfig is configured with formLogin.loginPage("/login")
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
@@ -168,7 +150,6 @@ public class AuthorizationServerConfig {
                 )
                 .build();
 
-        // Save registered client's in db as if in-memory
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.save(messagingClient);
         registeredClientRepository.save(deviceClient);
@@ -177,7 +158,6 @@ public class AuthorizationServerConfig {
 
         return registeredClientRepository;
     }
-    // @formatter:on
 
     @Bean
     public JdbcOAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
@@ -188,7 +168,6 @@ public class AuthorizationServerConfig {
     @Bean
     public JdbcOAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,
                                                                              RegisteredClientRepository registeredClientRepository) {
-        // Will be used by the ConsentController
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
 

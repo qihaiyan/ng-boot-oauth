@@ -41,7 +41,6 @@ public final class DeviceClientAuthenticationConverter implements Authentication
             return null;
         }
 
-        // client_id (REQUIRED)
         String clientId = request.getParameter(OAuth2ParameterNames.CLIENT_ID);
         if (!StringUtils.hasText(clientId) ||
                 request.getParameterValues(OAuth2ParameterNames.CLIENT_ID).length != 1) {
