@@ -3,27 +3,17 @@
 
 An oauth2 demo with angularjs and springboot.
 
-Default username is `admin`, and password is `111111`.
+Default username is `user`, and password is `111111`.
 ## 1. Features
 ### Modules
 
 The project contains 3 modules
 * authserver
 * ui (A client using oauth2 code flow)
-* ui-implicit (A client using oauth2 implicit flow, with a standalone frontend module)
+* ui-spa (A client using oauth2 pkce flow, with a standalone frontend module)
 
 ### Frontend
-* ES6
-* AngularJs 1.x
-* webpack dev server reload
-(by inserting a web-dev-server script into index.html when the environment is set to DEV )
-```
-<% if (webpackConfig.metadata.ENV === 'dev') { %>
-<!-- webpack dev server reload -->
-<script src="http://<%= webpackConfig.metadata.host %>:<%= webpackConfig.metadata.port %>/webpack-dev-server.js"></script>
-<!-- end webpack dev server reload -->
-<% } %>
-```
+* Angular 18
 
 ### Backend
 * Gradle Build Tool 

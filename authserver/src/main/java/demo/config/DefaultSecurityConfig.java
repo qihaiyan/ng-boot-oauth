@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.session.SessionRegistry;
@@ -18,11 +18,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.util.StringUtils;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.function.Supplier;
 
@@ -38,6 +39,7 @@ public class DefaultSecurityConfig {
                                 .requestMatchers("/assets/**", "/login").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
@@ -51,11 +53,11 @@ public class DefaultSecurityConfig {
                                 .loginPage("/login")
                                 .successHandler(authenticationSuccessHandler())
                 )
-                .logout(logout -> logout
-                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).permitAll()
-                )
-                .exceptionHandling(customizer -> customizer
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+//                .logout(logout -> logout
+//                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()).permitAll()
+//                )
+//                .exceptionHandling(customizer -> customizer
+//                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
         ;
 
         return http.build();
@@ -67,8 +69,8 @@ public class DefaultSecurityConfig {
 
     @Bean
     public UserDetailsService users(PasswordEncoder passwordEncoder) {
-        UserDetails user = User.withUsername("user1")
-                .password(passwordEncoder.encode("password"))
+        UserDetails user = User.withUsername("user")
+                .password(passwordEncoder.encode("111111"))
                 .roles("USER")
                 .build();
         return new InMemoryUserDetailsManager(user);
@@ -77,6 +79,18 @@ public class DefaultSecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        config.addAllowedOrigin("http://127.0.0.1:4200");
+        config.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean
