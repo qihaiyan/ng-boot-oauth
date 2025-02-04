@@ -32,6 +32,7 @@ export const appConfig: ApplicationConfig = {
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,
+        secureRoutes: ['http://localhost:8090/'],
       },
     }),
     provideRouter(

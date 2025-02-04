@@ -14,8 +14,8 @@ apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-sourceCompatibility = 21
-targetCompatibility = 21
+sourceCompatibility = 17
+targetCompatibility = 17
 
 configurations {
 	compileOnly {
@@ -34,8 +34,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation('org.springframework.boot:spring-boot-starter-oauth2-resource-server')
+	implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 	annotationProcessor 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

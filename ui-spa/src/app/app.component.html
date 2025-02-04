@@ -12,12 +12,9 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/">Home</a>
           </li>
-          <!-- <li *ngIf="isAuthenticated" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Authorize</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" (click)="authorizeMessages()">Messages</a></li>
-            </ul>
-          </li> -->
+          <li *ngIf="isAuthenticated" class="nav-item">
+            <a class="nav-link active" href="#" (click)="getMessages()">Messages</a>
+          </li>
         </ul>
         <div class="d-flex">
           @if (isAuthenticated) {

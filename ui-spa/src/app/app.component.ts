@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
         this.isAuthenticated = isAuthenticated;
       });
     //     this.getUserInfo();
-    //     this.getMessages();
+        // this.getMessages();
   }
 
   login(): void {
@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
   }
 
   getMessages(): void {
-    this.http.get<string[]>('/messages')
+    this.http.get<string[]>('http://localhost:8090/messages')
       .pipe(catchError((error) => {
         console.error(error);
         return of([]);
