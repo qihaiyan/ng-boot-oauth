@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import demo.authentication.DeviceClientAuthenticationProvider;
+import demo.federation.FederatedIdentityAuthenticationSuccessHandler;
 import demo.federation.FederatedIdentityIdTokenCustomizer;
 import demo.jose.Jwks;
 import demo.web.authentication.DeviceClientAuthenticationConverter;
@@ -19,6 +20,10 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -28,20 +33,18 @@ import org.springframework.security.oauth2.server.authorization.JdbcOAuth2Author
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import java.util.UUID;
-
-import static org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer.authorizationServer;
 
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
@@ -59,11 +62,7 @@ public class AuthorizationServerConfig {
         DeviceClientAuthenticationProvider deviceClientAuthenticationProvider =
                 new DeviceClientAuthenticationProvider(registeredClientRepository);
 
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = authorizationServer();
-
-        http
-                .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
-                .with(authorizationServerConfigurer, (authorizationServer) ->
+        http.oauth2AuthorizationServer((authorizationServer) ->
                         authorizationServer
                                 .deviceAuthorizationEndpoint(deviceAuthorizationEndpoint ->
                                         deviceAuthorizationEndpoint.verificationUri("/activate")
@@ -80,19 +79,36 @@ public class AuthorizationServerConfig {
                                         authorizationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI))
                                 .oidc(Customizer.withDefaults())    // Enable OpenID Connect 1.0
                 )
-                .cors(Customizer.withDefaults())
-                .authorizeHttpRequests((authorize) ->
-                        authorize.anyRequest().authenticated()
-                )
+                // Redirect to the /login page when not authenticated from the authorization endpoint
+                // NOTE: DefaultSecurityConfig is configured with formLogin.loginPage("/login")
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
+                )
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .requestMatchers("/assets/**", "/login").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login")
+                )
+                .oauth2Login(oauth2Login ->
+                        oauth2Login
+                                .loginPage("/login")
+                                .successHandler(authenticationSuccessHandler())
                 );
         return http.build();
     }
 
+    private AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new FederatedIdentityAuthenticationSuccessHandler();
+    }
+
+    // @formatter:off
     @Bean
     public JdbcRegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
         RegisteredClient messagingClient = RegisteredClient.withId(UUID.randomUUID().toString())
@@ -110,7 +126,7 @@ public class AuthorizationServerConfig {
                 .scope("message.read")
                 .scope("message.write")
                 .scope("user.read")
-//                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
 
         RegisteredClient deviceClient = RegisteredClient.withId(UUID.randomUUID().toString())
@@ -151,26 +167,16 @@ public class AuthorizationServerConfig {
                 )
                 .build();
 
-        RegisteredClient publicClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("spa-client")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("http://localhost:4200")
-                .postLogoutRedirectUri("http://localhost:4200")
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .scope(OidcScopes.EMAIL)
-                .build();
-
+        // Save registered client's in db as if in-memory
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.save(messagingClient);
         registeredClientRepository.save(deviceClient);
         registeredClientRepository.save(tokenExchangeClient);
         registeredClientRepository.save(mtlsDemoClient);
-        registeredClientRepository.save(publicClient);
 
         return registeredClientRepository;
     }
+    // @formatter:on
 
     @Bean
     public JdbcOAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
@@ -181,6 +187,7 @@ public class AuthorizationServerConfig {
     @Bean
     public JdbcOAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,
                                                                              RegisteredClientRepository registeredClientRepository) {
+        // Will be used by the ConsentController
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
 
@@ -218,4 +225,13 @@ public class AuthorizationServerConfig {
                 .build();
     }
 
+    @Bean
+    public UserDetailsService users() {
+        UserDetails user = User.withDefaultPasswordEncoder()
+                .username("user1")
+                .password("password")
+                .roles("USER")
+                .build();
+        return new InMemoryUserDetailsManager(user);
+    }
 }

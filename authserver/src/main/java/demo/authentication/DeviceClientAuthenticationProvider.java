@@ -1,8 +1,6 @@
 package demo.authentication;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -15,9 +13,9 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.util.Assert;
 
+@Slf4j
 public final class DeviceClientAuthenticationProvider implements AuthenticationProvider {
 	private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-3.2.1";
-	private final Log logger = LogFactory.getLog(getClass());
 	private final RegisteredClientRepository registeredClientRepository;
 
 	public DeviceClientAuthenticationProvider(RegisteredClientRepository registeredClientRepository) {
@@ -40,21 +38,9 @@ public final class DeviceClientAuthenticationProvider implements AuthenticationP
 			throwInvalidClient(OAuth2ParameterNames.CLIENT_ID);
 		}
 
-		if (this.logger.isTraceEnabled()) {
-			this.logger.trace("Retrieved registered client");
-		}
-
 		if (!registeredClient.getClientAuthenticationMethods().contains(
 				deviceClientAuthentication.getClientAuthenticationMethod())) {
 			throwInvalidClient("authentication_method");
-		}
-
-		if (this.logger.isTraceEnabled()) {
-			this.logger.trace("Validated device client authentication parameters");
-		}
-
-		if (this.logger.isTraceEnabled()) {
-			this.logger.trace("Authenticated device client");
 		}
 
 		return new DeviceClientAuthenticationToken(registeredClient,

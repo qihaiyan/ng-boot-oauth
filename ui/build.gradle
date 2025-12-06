@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '3.3.6'
+		springBootVersion = '4.0.0'
 	}
 	repositories {
 		mavenCentral()
@@ -32,7 +32,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-	implementation('org.springframework.boot:spring-boot-starter-oauth2-resource-server')
+	implementation('implementation "org.springframework.boot:spring-boot-starter-oauth2-client"')
 	annotationProcessor 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
