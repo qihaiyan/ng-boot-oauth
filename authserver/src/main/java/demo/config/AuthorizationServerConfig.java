@@ -9,6 +9,7 @@ import demo.federation.FederatedIdentityAuthenticationSuccessHandler;
 import demo.federation.FederatedIdentityIdTokenCustomizer;
 import demo.jose.Jwks;
 import demo.web.authentication.DeviceClientAuthenticationConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -42,10 +43,13 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import java.util.UUID;
 
+@Slf4j
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
     private static final String CUSTOM_CONSENT_PAGE_URI = "/oauth2/consent";
@@ -101,8 +105,16 @@ public class AuthorizationServerConfig {
                                 .loginPage("/login")
                                 .successHandler(authenticationSuccessHandler())
                 );
+//                .logout(logout -> logout
+//                        .addLogoutHandler(clearSiteData)
+//                        .clearAuthentication(true)
+//                        .invalidateHttpSession(true)
+//                        .deleteCookies("JSESSIONID")
+//                        .permitAll());
         return http.build();
     }
+
+    HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL));
 
     private AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new FederatedIdentityAuthenticationSuccessHandler();
@@ -120,7 +132,7 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .redirectUri("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc")
                 .redirectUri("http://127.0.0.1:8080/authorized")
-                .postLogoutRedirectUri("http://127.0.0.1:8080/logged-out")
+                .postLogoutRedirectUri("http://127.0.0.1:8080")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope("message.read")

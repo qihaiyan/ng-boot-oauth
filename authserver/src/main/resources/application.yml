@@ -1,5 +1,9 @@
 server:
-  port: 8080
+  port: 9000
+
+logging:
+  level:
+    org.springframework.security: trace
 
 spring:
   security:
@@ -23,7 +27,3 @@ spring:
             user-name-attribute: email
           github:
             user-name-attribute: login
-
-logging:
-  level:
-    root: INFO
