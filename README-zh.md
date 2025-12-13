@@ -36,6 +36,8 @@ cd authserver
 ### 运行 ui 模块
 ```bash
 cd ui
+npm i
+npm run dev
 ./gradlew bootRun
 ```
 通过 `http://localhost:8080` 这个地址访问应用。

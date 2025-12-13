@@ -38,6 +38,8 @@ cd authserver
 ### RUNNING ui MODULE
 ```bash
 cd ui
+npm i
+npm run dev
 ./gradlew bootRun
 ```
 Now we can visit the app at `http://localhost:8080`
