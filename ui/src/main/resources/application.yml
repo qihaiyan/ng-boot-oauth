@@ -22,26 +22,26 @@ spring:
             redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
             scope: openid, profile
             client-name: messaging-client-oidc
-          google:
-            client-id: your-app-client-id
-            client-secret: your-app-client-secret
+#          google:
+#            client-id: your-app-client-id
+#            client-secret: your-app-client-secret
           github:
             client-id: your-app-client-id
             client-secret: your-app-client-secret
-          facebook:
-            client-id: your-app-client-id
-            client-secret: your-app-client-secret
-          okta:
-            client-id: your-app-client-id
-            client-secret: your-app-client-secret
+#          facebook:
+#            client-id: your-app-client-id
+#            client-secret: your-app-client-secret
+#          okta:
+#            client-id: your-app-client-id
+#            client-secret: your-app-client-secret
         provider:
           spring:
             issuer-uri: http://localhost:9000
 #            authorization-uri: http://localhost:9000/oauth2/authorize
 #            token-uri: http://localhost:9000/oauth2/token
 #            jwk-set-uri: http://localhost:9000/oauth2/jwks
-          okta:
-            authorization-uri: https://your-subdomain.oktapreview.com/oauth2/v1/authorize
-            token-uri: https://your-subdomain.oktapreview.com/oauth2/v1/token
-            user-info-uri: https://your-subdomain.oktapreview.com/oauth2/v1/userinfo
-            jwk-set-uri: https://your-subdomain.oktapreview.com/oauth2/v1/keys
+#          okta:
+#            authorization-uri: https://your-subdomain.oktapreview.com/oauth2/v1/authorize
+#            token-uri: https://your-subdomain.oktapreview.com/oauth2/v1/token
+#            user-info-uri: https://your-subdomain.oktapreview.com/oauth2/v1/userinfo
+#            jwk-set-uri: https://your-subdomain.oktapreview.com/oauth2/v1/keys

@@ -11,7 +11,7 @@
         Do you authorize <span th:text="${authorizationRequest.clientId}"></span> at <span
             th:text="${authorizationRequest.redirectUri}"></span> to access your
         protected resources
-        with scope <span th:text="${authorizationRequest.scope}"/>.
+        with scope <span th:text="${authorizationRequest.scope}"></span>.
     </p>
     <form id="confirmationForm" name="confirmationForm"
           action="../oauth/authorize" method="post">

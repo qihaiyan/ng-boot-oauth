@@ -26,3 +26,4 @@
 ### IntelliJ IDEA ###
 .idea
 .gradle
+/ui/node_modules/

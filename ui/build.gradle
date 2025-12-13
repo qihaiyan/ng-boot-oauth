@@ -33,6 +33,20 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity6')
 	annotationProcessor 'org.projectlombok:lombok'
+    runtimeOnly "org.webjars:webjars-locator-lite"
+    runtimeOnly("org.webjars.npm:preline:3.2.3") {
+        exclude group: "org.webjars.npm", module: "*"
+    }
+    runtimeOnly("org.webjars.npm:alpinejs:3.15.2") {
+        exclude group: "org.webjars.npm", module: "*"
+    }
+    runtimeOnly("org.webjars.npm:lodash:4.17.21") {
+        exclude group: "org.webjars.npm", module: "*"
+    }
+    runtimeOnly("org.webjars.npm:apexcharts:5.3.5") {
+        exclude group: "org.webjars.npm", module: "*"
+    }
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
