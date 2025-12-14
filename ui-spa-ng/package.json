@@ -21,6 +21,7 @@
         "@angular/router": "^20",
         "@primeuix/themes": "^1.2.1",
         "@tailwindcss/postcss": "^4.1.11",
+        "angular-auth-oidc-client": "^20",
         "chart.js": "4.4.2",
         "primeclt": "^0.1.5",
         "primeicons": "^7.0.0",

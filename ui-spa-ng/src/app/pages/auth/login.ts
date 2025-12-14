@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -6,6 +6,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 
 @Component({
@@ -54,7 +55,7 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
                                 </div>
                                 <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                             </div>
-                            <p-button label="Sign In" styleClass="w-full" routerLink="/"></p-button>
+                            <p-button label="Sign In" styleClass="w-full" (click)="login()"></p-button>
                         </div>
                     </div>
                 </div>
@@ -62,10 +63,34 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
         </div>
     `
 })
-export class Login {
+
+export class Login implements OnInit {
+    private readonly oidcSecurityService = inject(OidcSecurityService);
+isAuthenticated: boolean = false;
+userName: string = '';
+  messages: string[] = [];
+
     email: string = '';
 
     password: string = '';
 
     checked: boolean = false;
+
+ngOnInit(): void {
+    this.oidcSecurityService
+      .checkAuth()
+      .subscribe(({ isAuthenticated, accessToken }) => {
+        console.log('app authenticated', isAuthenticated);
+        console.log(`Current access token is '${accessToken}'`);
+        this.isAuthenticated = isAuthenticated;
+      });
+    //     this.getUserInfo();
+        // this.getMessages();
+  }
+
+      login(): void {
+        // The Backend is configured to trigger login when unauthenticated
+        //     window.location.href = environment.backendBaseUrl;
+        this.oidcSecurityService.authorize();
+      }
 }

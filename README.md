@@ -64,4 +64,4 @@ cd ui-spa
 npm run dev
 ```
 
-Now we can visit the app at `http://localhost:4200`
+Now we can visit the app at `http://127.0.0.1:4200`

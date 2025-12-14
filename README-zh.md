@@ -40,7 +40,7 @@ npm i
 npm run dev
 ./gradlew bootRun
 ```
-通过 `http://localhost:8080` 这个地址访问应用。
+通过 `http://127.0.0.1:8080` 这个地址访问应用。
 
 ### 运行 ui-spa 模块
 
@@ -64,4 +64,4 @@ cd ui-spa
 npm run dev
 ```
 
-通过 `http://localhost:4200` 这个地址访问应用。
+通过 `http://127.0.0.1:4200` 这个地址访问应用。
