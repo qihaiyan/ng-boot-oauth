@@ -46,7 +46,12 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -58,7 +63,7 @@ public class AuthorizationServerConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(
             HttpSecurity http, RegisteredClientRepository registeredClientRepository,
-            AuthorizationServerSettings authorizationServerSettings) throws Exception {
+            AuthorizationServerSettings authorizationServerSettings) {
 
         DeviceClientAuthenticationConverter deviceClientAuthenticationConverter =
                 new DeviceClientAuthenticationConverter(
@@ -104,7 +109,13 @@ public class AuthorizationServerConfig {
                         oauth2Login
                                 .loginPage("/login")
                                 .successHandler(authenticationSuccessHandler())
-                );
+                )
+                .cors(Customizer.withDefaults());
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/oauth2/**", "/.well-known/**", "/login/**")
+//                        .permitAll()
+//                        .anyRequest().authenticated()
+//                );
 //                .logout(logout -> logout
 //                        .addLogoutHandler(clearSiteData)
 //                        .clearAuthentication(true)
@@ -130,8 +141,12 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc")
-                .redirectUri("http://127.0.0.1:8080/authorized")
+                .redirectUris((uris) -> uris.addAll(Set.of(
+                        "http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc",
+                        "http://127.0.0.1:8080/authorized",
+                        "http://127.0.0.1:4200",
+                        "http://localhost:4200"))
+                )
                 .postLogoutRedirectUri("http://127.0.0.1:8080")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
@@ -179,12 +194,31 @@ public class AuthorizationServerConfig {
                 )
                 .build();
 
+        RegisteredClient publicClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("public-client")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("http://127.0.0.1:4200")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(true)
+                        .requireProofKey(true)
+                        .build()
+                )
+                .redirectUris((uris) -> uris.addAll(Set.of(
+                        "http://127.0.0.1:4200",
+                        "http://localhost:4200"))
+                )
+                .build();
+
         // Save registered client's in db as if in-memory
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.save(messagingClient);
         registeredClientRepository.save(deviceClient);
         registeredClientRepository.save(tokenExchangeClient);
         registeredClientRepository.save(mtlsDemoClient);
+        registeredClientRepository.save(publicClient);
 
         return registeredClientRepository;
     }
@@ -223,6 +257,18 @@ public class AuthorizationServerConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        config.setAllowedOrigins(List.of("http://127.0.0.1:4200", "http://localhost:4200"));
+        config.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean

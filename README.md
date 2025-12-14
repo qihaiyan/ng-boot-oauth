@@ -42,7 +42,7 @@ npm i
 npm run dev
 ./gradlew bootRun
 ```
-Now we can visit the app at `http://localhost:8080`
+Now we can visit the app at `http://127.0.0.1:8080`
 
 ### RUNNING ui-spa MODULE
 

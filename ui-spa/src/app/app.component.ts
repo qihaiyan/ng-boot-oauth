@@ -10,7 +10,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
   standalone: true,
   imports: [NgIf, NgForOf],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   private readonly oidcSecurityService = inject(OidcSecurityService);
