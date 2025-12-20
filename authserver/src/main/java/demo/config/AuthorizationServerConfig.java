@@ -143,11 +143,13 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .redirectUris((uris) -> uris.addAll(Set.of(
                         "http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc",
-                        "http://127.0.0.1:8080/authorized",
-                        "http://127.0.0.1:4200",
-                        "http://localhost:4200"))
+                        "http://127.0.0.1:8080/authorized"
+                        ))
                 )
-                .postLogoutRedirectUri("http://127.0.0.1:8080")
+                .postLogoutRedirectUris((uris) -> uris.addAll(Set.of(
+                        "http://localhost:8080",
+                        "http://127.0.0.1:8080"
+                )))
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope("message.read")
@@ -198,7 +200,6 @@ public class AuthorizationServerConfig {
                 .clientId("public-client")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("http://127.0.0.1:4200")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .clientSettings(ClientSettings.builder()
@@ -208,8 +209,15 @@ public class AuthorizationServerConfig {
                 )
                 .redirectUris((uris) -> uris.addAll(Set.of(
                         "http://127.0.0.1:4200",
-                        "http://localhost:4200"))
+                        "http://localhost:4200",
+                        "http://localhost:5173"
+                        ))
                 )
+                .postLogoutRedirectUris((uris) -> uris.addAll(Set.of(
+                        "http://127.0.0.1:4200",
+                        "http://localhost:4200",
+                        "http://localhost:5173"
+                )))
                 .build();
 
         // Save registered client's in db as if in-memory
@@ -265,7 +273,7 @@ public class AuthorizationServerConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setAllowedOrigins(List.of("http://127.0.0.1:4200", "http://localhost:4200"));
+        config.setAllowedOrigins(List.of("http://127.0.0.1:4200", "http://localhost:4200", "http://localhost:5173"));
         config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
         return source;
