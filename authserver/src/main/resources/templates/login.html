@@ -1,43 +1,65 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Authorization Server</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/css/signin.css" th:href="@{/assets/css/signin.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
 </head>
 <body>
-<!--todo: https://primeblocks.org/free Glass 组件做登录页面-->
-<div class="container">
-    <form class="form-signin w-100 m-auto" method="post" th:action="@{/login}">
+<div class="min-h-screen w-full bg-[url('/assets/img/signin-glass.jpg')] flex items-center justify-center backdrop-blur-3xl bg-cover bg-center bg-no-repeat">
+    <div class="px-8 md:px-12 lg:px-20 py-12 flex flex-col items-center gap-12 w-full backdrop-blur-2xl rounded-2xl bg-white/10 border border-white/10 max-w-2xl">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             Invalid username or password.
         </div>
         <div th:if="${param.logout}" class="alert alert-success" role="alert">
             You have been logged out.
         </div>
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-        <div class="form-floating">
-            <input type="text" id="username" name="username" class="form-control" required autofocus>
-            <label for="username">Username</label>
+        <div class="flex flex-col items-center gap-4 w-full">
+            <div class="flex flex-col gap-2 w-full">
+                <div class="text-center text-3xl font-medium text-white leading-tight">Welcome Back</div>
+                <div class="text-center">
+                    <span class="text-white/80">Don't have an account? </span>
+                    <a class="text-white/80 cursor-pointer hover:text-white/90 underline">Sign up</a>
+                </div>
+            </div>
         </div>
-        <div class="form-floating">
-            <input type="password" id="password" name="password" class="form-control" required>
-            <label for="password">Password</label>
+        <div class="flex flex-col items-center gap-8 w-full">
+            <form method="post" th:action="@{/login}" class="flex flex-col gap-6 w-full">
+                <div class="flex items-center mb-4">
+                    <label for="username" class="text-white/70 mr-3">Username</label>
+                    <input type="text" id="username" name="username" required autofocus
+                           class="appearance-none border border-white/10 w-full outline-0 bg-white/10 text-white placeholder:text-white/70 rounded-3xl shadow-sm"
+                    />
+                </div>
+                <div class="flex items-center mb-4">
+                    <label for="password" class="text-white/70 mr-3">Password</label>
+                    <input type="password" id="password" name="password" required
+                           class="appearance-none border border-white/10 w-full outline-0 bg-white/10 text-white placeholder:text-white/70 rounded-3xl shadow-sm"
+                    />
+                </div>
+                <button type="submit"
+                        class="cursor-pointer py-2 w-full rounded-3xl bg-surface-950 border border-surface-950 text-white">
+                    Sign In
+                </button>
+                <div class="flex items-center justify-center mb-4 cursor-pointer py-2 w-full">
+                    <a class="flex items-center justify-center mb-4 mx-2 cursor-pointer py-2 w-full rounded-3xl bg-surface-950 border border-surface-950 text-white"
+                       href="/oauth2/authorization/google-idp" role="link">
+                        <img src="/assets/img/google.png" th:src="@{/assets/img/google.png}" width="20" class="mr-3"
+                             alt="Sign in with Google">
+                        <span>Sign in with Google</span>
+                    </a>
+                    <a class="flex items-center justify-center mb-4 x-2 cursor-pointer py-2 w-full rounded-3xl bg-surface-950 border border-surface-950 text-white"
+                       href="/oauth2/authorization/github-idp" role="link">
+                        <img src="/assets/img/github.png" th:src="@{/assets/img/github.png}" width="24" class="mr-3"
+                             alt="Sign in with Github">
+                        Sign in with Github
+                    </a>
+                </div>
+            </form>
         </div>
-        <div>
-            <button class="w-100 btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-            <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/google-idp" role="link" style="margin-top: 10px">
-                <img src="/assets/img/google.png" th:src="@{/assets/img/google.png}" width="20" style="margin-right: 5px;" alt="Sign in with Google">
-                Sign in with Google
-            </a>
-            <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/github-idp" role="link" style="margin-top: 10px">
-                <img src="/assets/img/github.png" th:src="@{/assets/img/github.png}" width="24" style="margin-right: 5px;" alt="Sign in with Github">
-                Sign in with Github
-            </a>
-        </div>
-    </form>
+        <a class="text-white/80 cursor-pointer hover:text-white/90">Forgot Password?</a>
+    </div>
 </div>
 </body>
 </html>

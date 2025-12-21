@@ -27,3 +27,4 @@
 .idea
 .gradle
 /ui/node_modules/
+/authserver/node_modules/

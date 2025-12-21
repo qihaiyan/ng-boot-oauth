@@ -131,7 +131,6 @@ public class AuthorizationServerConfig {
         return new FederatedIdentityAuthenticationSuccessHandler();
     }
 
-    // @formatter:off
     @Bean
     public JdbcRegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
         RegisteredClient messagingClient = RegisteredClient.withId(UUID.randomUUID().toString())
@@ -230,7 +229,6 @@ public class AuthorizationServerConfig {
 
         return registeredClientRepository;
     }
-    // @formatter:on
 
     @Bean
     public JdbcOAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,

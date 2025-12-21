@@ -1,7 +1,7 @@
 # ng-boot-oauth
 oauth2 demo 程序，使用了angular 19 和 springboot框架。
 
-默认的用户名是 `admin`, 密码是 `111111`
+默认的用户名是 `user`, 密码是 `password`
 ## 1. 特点
 ### 模块
 
@@ -30,7 +30,7 @@ cd ng-boot-oauth
 ### 运行 OAuth2 Server
 ```bash
 cd authserver
-./gradlew bootRun
+gradle bootRun
 ```
 
 ### 运行 ui 模块
@@ -38,7 +38,7 @@ cd authserver
 cd ui
 npm i
 npm run dev
-./gradlew bootRun
+gradle bootRun
 ```
 通过 `http://127.0.0.1:8080` 这个地址访问应用。
 
@@ -47,7 +47,7 @@ npm run dev
 * 运行后端服务
 ```bash
 cd ui-spa
-./gradlew bootRun
+gradle bootRun
 ```
 
 * 运行前端模块
