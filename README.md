@@ -1,9 +1,11 @@
+![auth-ui](./docs/snapshot.png)
+
 # ng-boot-oauth
 [中文介绍](README-zh.md)
 
 An oauth2 demo with angularjs and springboot.
+Default username is `user`, and password is `password`.
 
-Default username is `user`, and password is `111111`.
 ## 1. Features
 ### Modules
 
@@ -14,6 +16,8 @@ The project contains 3 modules
 
 ### Frontend
 * Angular 19
+* React 19
+* Vue 3
 
 ### Backend
 * Gradle Build Tool 
