@@ -13,13 +13,13 @@ public class DeviceClientAuthenticationToken extends OAuth2ClientAuthenticationT
 
     public DeviceClientAuthenticationToken(
             String clientId, ClientAuthenticationMethod clientAuthenticationMethod,
-            @Nullable Object credentials, @Nullable Map<String, Object> additionalParameters) {
+            Object credentials, Map<String, Object> additionalParameters) {
         super(clientId, clientAuthenticationMethod, credentials, additionalParameters);
     }
 
     public DeviceClientAuthenticationToken(
             RegisteredClient registeredClient, ClientAuthenticationMethod clientAuthenticationMethod,
-            @Nullable Object credentials) {
+            Object credentials) {
         super(registeredClient, clientAuthenticationMethod, credentials);
     }
 

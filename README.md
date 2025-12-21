@@ -1,3 +1,4 @@
+![auth-login](./docs/login.png)
 ![auth-ui](./docs/snapshot.png)
 
 # ng-boot-oauth
@@ -15,7 +16,7 @@ The project contains 3 modules
 * ui-spa (A client using oauth2 pkce flow, with a standalone frontend module)
 
 ### Frontend
-* Angular 19
+* Angular 20
 * React 19
 * Vue 3
 
@@ -36,7 +37,7 @@ cd ng-boot-oauth
 ### RUNNING OAuth2 Server
 ```bash
 cd authserver
-./gradlew bootRun
+gradle bootRun
 ```
 
 ### RUNNING ui MODULE
@@ -44,7 +45,7 @@ cd authserver
 cd ui
 npm i
 npm run dev
-./gradlew bootRun
+gradle bootRun
 ```
 Now we can visit the app at `http://127.0.0.1:8080`
 
