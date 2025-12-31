@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Spring Authorization Server sample</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
 </head>
 <body>
-<div class="container">
-    <div class="row py-5">
-        <div class="col-md-5">
-            <h2 class="text-success">Success!</h2>
+<div class="container mx-auto px-4 max-w-4xl">
+    <div class="py-5 flex flex-col md:flex-row">
+        <div class="md:w-5/12">
+            <h2 class="text-green-600 text-2xl font-bold">Success!</h2>
             <p>
                 You have successfully activated your device.<br/>
                 Please return to your device to continue.
             </p>
         </div>
-        <div class="col-md-7">
-            <img src="/assets/img/devices.png" th:src="@{/assets/img/devices.png}" class="img-responsive" alt="Devices">
+        <div class="md:w-7/12 mt-4 md:mt-0">
+            <img src="/assets/img/devices.png" th:src="@{/assets/img/devices.png}" class="max-w-full h-auto" alt="Devices">
         </div>
     </div>
 </div>
