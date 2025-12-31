@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Authorization Server</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
 </head>
 <body>
-<div class="container">
-    <div class="row py-5">
-        <div class="col-md-6">
-            <h2 class="text-danger" th:text="${errorTitle}"></h2>
+<div class="container mx-auto px-4 max-w-4xl">
+    <div class="py-5">
+        <div class="md:w-1/2">
+            <h2 class="text-red-600 text-2xl font-bold" th:text="${errorTitle}"></h2>
             <p th:text="${errorMessage}"></p>
         </div>
     </div>

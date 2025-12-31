@@ -1,0 +1,66 @@
+sequenceDiagram
+    participant User as 用户
+    participant VueApp as Vue 应用
+    participant OAuthClient as OAuthClient
+    participant Storage as 本地存储
+    participant AuthServer as 授权服务器<br/>(http://localhost:9000)
+
+    Note over VueApp,AuthServer: === 1. 应用启动初始化 ===
+    VueApp->>OAuthClient: createOAuthClient({ url, clientId, scopes })
+    VueApp->>OAuthClient: initialize()
+    OAuthClient->>AuthServer: discoveryRequest(issuer)<br/>获取授权服务器元数据
+    AuthServer-->>OAuthClient: 返回 AuthorizationServer 元数据<br/>(token_endpoint, authorization_endpoint, etc.)
+    
+    alt 存在 refresh_token
+        OAuthClient->>Storage: 读取 refresh_token
+        OAuthClient->>AuthServer: refreshTokenGrantRequest(refresh_token)
+        AuthServer-->>OAuthClient: 返回新的 access_token, refresh_token, id_token
+        OAuthClient->>Storage: 保存新令牌
+    else 存在 code_verifier (回调场景)
+        OAuthClient->>Storage: 读取 code_verifier
+        OAuthClient->>OAuthClient: handleCodeResponse(urlParams)
+        OAuthClient->>AuthServer: authorizationCodeGrantRequest(code, code_verifier)
+        AuthServer-->>OAuthClient: 返回 access_token, refresh_token, id_token
+        OAuthClient->>Storage: 保存令牌
+    end
+
+    Note over VueApp,AuthServer: === 2. 用户登录流程 ===
+    User->>VueApp: 点击登录按钮
+    VueApp->>OAuthClient: authorize()
+    OAuthClient->>OAuthClient: 生成 code_verifier
+    OAuthClient->>OAuthClient: 计算 code_challenge (S256)
+    OAuthClient->>AuthServer: 重定向到授权端点<br/>?client_id=xxx&code_challenge=xxx&redirect_uri=xxx
+    
+    AuthServer-->>User: 显示登录页面
+    User->>AuthServer: 输入用户名密码并授权
+    AuthServer-->>VueApp: 重定向回应用<br/>?code=AUTHORIZATION_CODE
+    
+    VueApp->>OAuthClient: initialize() 检测到 URL 参数
+    OAuthClient->>Storage: 读取 code_verifier
+    OAuthClient->>AuthServer: authorizationCodeGrantRequest(code, code_verifier)
+    AuthServer-->>OAuthClient: 返回 access_token, refresh_token, id_token
+    OAuthClient->>Storage: 保存令牌
+    OAuthClient-->>VueApp: 登录成功，loggedIn = true
+
+    Note over VueApp,AuthServer: === 3. 访问受保护资源 ===
+    VueApp->>VueApp: 使用 access_token 访问 API
+    VueApp->>AuthServer: API 请求 (Header: Authorization: Bearer access_token)
+    AuthServer-->>VueApp: 返回受保护的数据
+
+    Note over VueApp,AuthServer: === 4. 刷新令牌流程 ===
+    VueApp->>OAuthClient: refreshToken()
+    OAuthClient->>Storage: 读取 refresh_token
+    OAuthClient->>AuthServer: refreshTokenGrantRequest(refresh_token)
+    AuthServer-->>OAuthClient: 返回新的 access_token, refresh_token, id_token
+    OAuthClient->>Storage: 保存新令牌
+
+    Note over VueApp,AuthServer: === 5. 用户登出流程 ===
+    User->>VueApp: 点击登出按钮
+    VueApp->>OAuthClient: logout()
+    OAuthClient->>Storage: 读取 id_token
+    OAuthClient->>Storage: 清除 refresh_token, id_token
+    OAuthClient->>AuthServer: 重定向到登出端点<br/>?id_token_hint=xxx&post_logout_redirect_uri=xxx
+    AuthServer-->>User: 清除服务器端会话
+    AuthServer-->>VueApp: 重定向回应用
+    OAuthClient->>Storage: 清除 access_token
+    OAuthClient-->>VueApp: 登出成功，loggedIn = false
