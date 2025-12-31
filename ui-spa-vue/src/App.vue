@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
-import { useOAuthClient } from '@volverjs/auth-vue'
+import { useOAuthClient } from './auth'
 
 const authClient = useOAuthClient()
 authClient.initialize()
