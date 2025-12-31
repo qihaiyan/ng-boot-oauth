@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { createOAuthClient } from '@volverjs/auth-vue'
+import { createOAuthClient } from './auth'
 
 import './style.css'
 import App from './App.vue'
