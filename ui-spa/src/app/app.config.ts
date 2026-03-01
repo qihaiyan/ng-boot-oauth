@@ -22,7 +22,6 @@ export const appConfig: ApplicationConfig = {
         forbiddenRoute: '/forbidden',
         unauthorizedRoute: '/unauthorized',
         logLevel: LogLevel.Debug,
-        historyCleanupOff: true,
         authority: 'http://localhost:9000',
         authWellknownEndpointUrl: 'http://localhost:9000/.well-known/openid-configuration',
         redirectUrl: window.location.origin,
