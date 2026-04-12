@@ -59,4 +59,5 @@ export class AppComponent {
       .subscribe((messages) => {
         this.messages.set(messages);
       });
+  }
 }
