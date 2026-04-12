@@ -26,5 +26,6 @@
 ### IntelliJ IDEA ###
 .idea
 .gradle
+.vscode
 /ui/node_modules/
 /authserver/node_modules/
