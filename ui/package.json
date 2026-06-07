@@ -14,13 +14,13 @@
   "author": "",
   "description": "",
   "dependencies": {
-    "@tailwindcss/cli": "^4.2.2",
-    "preline": "^4.1.3"
+    "@tailwindcss/cli": "^4.3.0",
+    "preline": "^4.2.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.11",
-    "@tailwindcss/postcss": "^4.2.2",
-    "postcss": "^8.5.9",
-    "tailwindcss": "^4.2.2"
+    "@tailwindcss/postcss": "^4.3.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.0"
   }
 }

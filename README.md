@@ -16,7 +16,7 @@ The project contains 3 modules
 * ui-spa (A client using oauth2 pkce flow, with a standalone frontend module)
 
 ### Frontend
-* Angular 21
+* Angular 22
 * React 19
 * Vue 3
 

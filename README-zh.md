@@ -11,7 +11,7 @@ oauth2 demo 程序，使用了angular 19 和 springboot框架。
 * ui-spa (oauth2 code flow with pkce 的客户端应用，有一个独立的前端模块)
 
 ### 前端
-* Angular 21
+* Angular 22
 
 ### 后端
 * Gradle 构建工具 
@@ -37,7 +37,7 @@ gradle bootRun
 ```bash
 cd ui
 npm i
-npm run dev
+npm run watch
 gradle bootRun
 ```
 通过 `http://127.0.0.1:8080` 这个地址访问应用。
