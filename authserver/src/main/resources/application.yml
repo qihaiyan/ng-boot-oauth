@@ -27,3 +27,11 @@ spring:
             user-name-attribute: email
           github:
             user-name-attribute: login
+
+# 微信小程序授权配置（appid/secret 仅保存在 authserver 端，通过环境变量注入）
+wechat:
+  appid: ${WECHAT_APPID:}
+  secret: ${WECHAT_SECRET:}
+  # 本地开发调试开关：true 时跳过真实 jscode2session 调用，返回 mock-openid
+  mock-enabled: ${WECHAT_MOCK_ENABLED:false}
+  mock-openid: ${WECHAT_MOCK_OPENID:mock-openid}

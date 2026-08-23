@@ -9,6 +9,14 @@ import demo.federation.FederatedIdentityAuthenticationSuccessHandler;
 import demo.federation.FederatedIdentityIdTokenCustomizer;
 import demo.jose.Jwks;
 import demo.web.authentication.DeviceClientAuthenticationConverter;
+import demo.wechat.WechatApiService;
+import demo.wechat.WechatClientAuthenticationConverter;
+import demo.wechat.WechatClientAuthenticationProvider;
+import demo.wechat.WechatCodeGrantAuthenticationConverter;
+import demo.wechat.WechatCodeGrantAuthenticationProvider;
+import demo.wechat.WechatGrantTypes;
+import demo.wechat.WechatUserDetails;
+import demo.wechat.WechatUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,16 +37,24 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.JwtGenerator;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2AccessTokenGenerator;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -63,7 +79,11 @@ public class AuthorizationServerConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(
             HttpSecurity http, RegisteredClientRepository registeredClientRepository,
-            AuthorizationServerSettings authorizationServerSettings) {
+            AuthorizationServerSettings authorizationServerSettings,
+            WechatApiService wechatApiService,
+            WechatUserDetailsService wechatUserDetailsService,
+            OAuth2AuthorizationService authorizationService,
+            OAuth2TokenGenerator<?> tokenGenerator) {
 
         DeviceClientAuthenticationConverter deviceClientAuthenticationConverter =
                 new DeviceClientAuthenticationConverter(
@@ -82,11 +102,18 @@ public class AuthorizationServerConfig {
                                 .clientAuthentication(clientAuthentication ->
                                         clientAuthentication
                                                 .authenticationConverter(deviceClientAuthenticationConverter)
+                                                .authenticationConverter(new WechatClientAuthenticationConverter())
                                                 .authenticationProvider(deviceClientAuthenticationProvider)
+                                                .authenticationProvider(new WechatClientAuthenticationProvider(registeredClientRepository))
                                 )
                                 .authorizationEndpoint(authorizationEndpoint ->
                                         authorizationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI))
                                 .oidc(Customizer.withDefaults())    // Enable OpenID Connect 1.0
+                                .tokenEndpoint(tokenEndpoint -> tokenEndpoint
+                                        .accessTokenRequestConverter(new WechatCodeGrantAuthenticationConverter())
+                                        .authenticationProvider(new WechatCodeGrantAuthenticationProvider(
+                                                wechatApiService, wechatUserDetailsService,
+                                                authorizationService, tokenGenerator)))
                 )
                 // Redirect to the /login page when not authenticated from the authorization endpoint
                 // NOTE: DefaultSecurityConfig is configured with formLogin.loginPage("/login")
@@ -219,6 +246,19 @@ public class AuthorizationServerConfig {
                 )))
                 .build();
 
+        // 微信小程序客户端：不注册 openid 作用域。
+        // 小程序无需 OIDC id_token，仅需带 openid 声明的 access_token；
+        // 若引入 openid 作用域，刷新令牌时 OAuth2RefreshTokenAuthenticationProvider
+        // 会尝试再生成 id_token，但自定义 wechat-code 授权未保存 id_token，
+        // 导致 JwtGenerator 抛 "authorizedIdToken cannot be null"。
+        RegisteredClient miniappClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("miniapp-client")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+                .authorizationGrantType(new AuthorizationGrantType(WechatGrantTypes.WECHAT_CODE))
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .scope("message.read")
+                .build();
+
         // Save registered client's in db as if in-memory
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.save(messagingClient);
@@ -226,6 +266,7 @@ public class AuthorizationServerConfig {
         registeredClientRepository.save(tokenExchangeClient);
         registeredClientRepository.save(mtlsDemoClient);
         registeredClientRepository.save(publicClient);
+        registeredClientRepository.save(miniappClient);
 
         return registeredClientRepository;
     }
@@ -253,6 +294,30 @@ public class AuthorizationServerConfig {
         RSAKey rsaKey = Jwks.generateRsa();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    }
+
+    @Bean
+    public OAuth2TokenGenerator<?> tokenGenerator(JWKSource<SecurityContext> jwkSource,
+            OAuth2TokenCustomizer<JwtEncodingContext> idTokenCustomizer) {
+        JwtGenerator jwtGenerator = new JwtGenerator(new NimbusJwtEncoder(jwkSource));
+        jwtGenerator.setJwtCustomizer(context -> {
+            // 保留既有逻辑：融合第三方身份提供商 claims 到 id_token
+            idTokenCustomizer.customize(context);
+            // 将 openid 写入 access_token，资源服务器可直接获取微信身份。
+            // 微信用户以 openid（String）作为认证主体名称；刷新令牌反序列化后仍是 String，
+            // 因此这里统一读取 String 主体，避免依赖自定义类型。
+            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())
+                    && context.getPrincipal() != null
+                    && context.getPrincipal().getPrincipal() instanceof String openid
+                    && context.getRegisteredClient().getAuthorizationGrantTypes()
+                            .contains(new AuthorizationGrantType(WechatGrantTypes.WECHAT_CODE))) {
+                context.getClaims().claim("openid", openid);
+            }
+        });
+        OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
+        OAuth2RefreshTokenGenerator refreshTokenGenerator = new OAuth2RefreshTokenGenerator();
+        return new DelegatingOAuth2TokenGenerator(
+                jwtGenerator, accessTokenGenerator, refreshTokenGenerator);
     }
 
     @Bean
